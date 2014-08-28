@@ -369,7 +369,7 @@ class AuroraDB(object):
                                      total_mb_sent = %s,
                                      current_mb_sent= %s
                                      WHERE ap_slice_id='%s'""" %
-                                 (mb_sent, mb_sent - old_mb_sent, ap_slice_id)
+                                 (mb_sent, max(mb_sent - old_mb_sent, 0), ap_slice_id)
                              )
                 self.LOGGER.debug(to_execute)
                 db.execute(to_execute)
