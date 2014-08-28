@@ -602,7 +602,7 @@ class APMonitor(object):
                 self.get_stats(ap_name)
             except AuroraException as e:
                 self.LOGGER.warn(e.message)
-            for i in range(int((self.dispatcher.TIMEOUT + 5)/STOP_EVENT_CHECK_INTERVAL)):
+            for i in range(int((self.dispatcher.TIMEOUT - 40)/STOP_EVENT_CHECK_INTERVAL)):
                 if stop_event.is_set():
                     self.LOGGER.debug("Caught stop event for %s", own_thread)
                     break

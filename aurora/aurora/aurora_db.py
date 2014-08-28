@@ -359,14 +359,17 @@ class AuroraDB(object):
         """
         try:
             with self._database_connection() as db:
+                to_execute = """SELECT total_mb_sent
+                                FROM metering
+                                WHERE ap_slice_id = '%s'""" % (ap_slice_id)
+                db.execute(to_execute)
+                old_mb_sent = db.fetchall()[0][0]
+
                 to_execute = ("""UPDATE metering SET 
-                                     total_mb_sent=
-                                         (total_mb_sent-current_mb_sent)
-                                             + %s,
-                                     current_mb_sent=
-                                         %s
+                                     total_mb_sent = %s,
+                                     current_mb_sent= %s
                                      WHERE ap_slice_id='%s'""" %
-                                 (mb_sent, mb_sent, ap_slice_id)
+                                 (mb_sent, mb_sent - old_mb_sent, ap_slice_id)
                              )
                 self.LOGGER.debug(to_execute)
                 db.execute(to_execute)
